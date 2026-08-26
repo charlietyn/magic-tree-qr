@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+dist/
+dist-ssr/
+*.local
+
+# Wrangler / Cloudflare
+.wrangler/
+
+# Temporary / Scratch files
+deobfuscated/
+*.map
+*.log
+*.cjs
+check_*.js
+test_*.js
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
