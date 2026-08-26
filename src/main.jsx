@@ -17644,15 +17644,27 @@ var Te = {
   },
   creditsHintWrap: {
     position: "absolute",
-    right: "max(10px, env(safe-area-inset-right, 0px))",
-    top: "max(10px, env(safe-area-inset-top, 0px))",
+    right: "max(12px, env(safe-area-inset-right, 0px))",
+    top: "max(12px, env(safe-area-inset-top, 0px))",
     zIndex: 12,
     display: "inline-flex",
     alignItems: "center",
-    justifyContent: "center",
-    width: 28,
+    justifyContent: "flex-end",
+    gap: 8,
     height: 28,
     pointerEvents: "auto"
+  },
+  githubButton: {
+    width: 28,
+    height: 28,
+    borderRadius: "50%",
+    background: "transparent",
+    color: "#5f4e3d",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    textDecoration: "none",
+    transition: "color 0.2s ease, transform 0.2s ease"
   },
   creditsHintButton: {
     width: 28,
@@ -17783,6 +17795,7 @@ var Le = {
   "aria-hidden": true
 };
 var Ae = {
+  github: <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>,
   winter: <svg {...Le}><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93M8 4l4 4 4-4M8 20l4-4 4 4M4 8l4 4-4 4M20 8l-4 4 4 4" /></svg>,
   qrScan: <svg {...Le}><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" /><rect width="8" height="8" x="8" y="8" rx="1" /><circle cx="12" cy="12" r="1.5" fill="currentColor" /></svg>,
   spring: <svg {...Le}><circle cx="12" cy="12" r="3" /><path d="M12 16.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 1 1 12 7.5a4.5 4.5 0 1 1 4.5 4.5 4.5 4.5 0 1 1-4.5 4.5" /><path d="M12 7.5V9" /><path d="M7.5 12H9" /><path d="M16.5 12H15" /><path d="M12 16.5V15" /><path d="m8 8 1.88 1.88" /><path d="M14.12 9.88 16 8" /><path d="m8 16 1.88-1.88" /><path d="M14.12 14.12 16 16" /></svg>,
@@ -19480,10 +19493,7 @@ function _Component() {
               ...(_0x1bb750.isMobile ? Te.paletteSwatchMobile : {}),
               ...(_0x33296b === _0x2d9aad || _0x33296b === 0 && _0x2d9aad === -1 ? Te.paletteSwatchActive : {}),
               backgroundColor: _0x13972f.color
-            }} key={_0x33296b} />)}</div></div>}</div>}<div ref={_0x4efbdf} style={Te.creditsHintWrap}>{_0x2b80c3 && <div style={Te.creditsHintTooltip}><div style={Te.creditsHintArrow} /><div style={Te.creditsHintCard}><span>Created by <a href="https://x.com/logotypercom" target="_blank" rel="noopener noreferrer" style={Te.creditsHintLink}>Logotyper</a></span><br /><span style={{
-              display: "block",
-              marginTop: 6
-            }}>Inspired by <a href="https://x.com/reactiive_" target="_blank" rel="noopener noreferrer" style={Te.creditsHintLink}>Enzo Manuel Mangano</a><span> and </span><a href="https://x.com/msiddique26" target="_blank" rel="noopener noreferrer" style={Te.creditsHintLink}>Mohamed Siddique</a></span></div></div>}<button type="button" aria-label="Show inspiration credits" title="Inspiration credits" onClick={() => _0x23dd65(_0x3b08aa => !_0x3b08aa)} style={Te.creditsHintButton}>{Ae.info}</button></div></div>;
+            }} key={_0x33296b} />)}</div></div>}</div>}<div ref={_0x4efbdf} style={Te.creditsHintWrap}><a href="https://github.com/xscanzm/magic-tree-qr" target="_blank" rel="noopener noreferrer" aria-label="查看 GitHub 开源仓库" title="GitHub 开源仓库 (xscanzm/magic-tree-qr)" style={Te.githubButton}>{Ae.github}</a>{_0x2b80c3 && <div style={Te.creditsHintTooltip}><div style={Te.creditsHintArrow} /><div style={Te.creditsHintCard}><div style={{ fontWeight: 700, fontSize: 12, marginBottom: 4, color: "#3f3328" }}>3D 艺术二维码生成器</div><div style={{ color: "#6e5d4e", marginBottom: 6 }}>点击树木可俯视查看扫码二维码<br />支持春季 · 夏季 · 秋季 · 冬季</div><div style={{ borderTop: "1px solid rgba(158, 142, 121, 0.22)", paddingTop: 6, marginBottom: 6 }}><span style={{ fontWeight: 600 }}>开源仓库：</span><a href="https://github.com/xscanzm/magic-tree-qr" target="_blank" rel="noopener noreferrer" style={Te.creditsHintLink}>github.com/xscanzm/magic-tree-qr</a></div><div style={{ borderTop: "1px solid rgba(158, 142, 121, 0.15)", paddingTop: 5, display: "flex", justifyContent: "space-between", color: "#8a7a6b", fontSize: 10 }}><span>致敬 <a href="https://icqr.com" target="_blank" rel="noopener noreferrer" style={Te.creditsHintLink}>icqr</a></span><span>汉化 & 重构 <strong>xscanzm</strong></span></div></div></div>}<button type="button" aria-label="查看项目说明与开源信息" title="项目说明 & 开源信息" onClick={() => _0x23dd65(_0x3b08aa => !_0x3b08aa)} style={Te.creditsHintButton}>{Ae.info}</button></div></div>;
   } else {
     return <div style={Te.container}><div style={Te.errorMessage}><h2>当前浏览器不支持 WebGPU</h2><p>本程序需要 WebGPU 支持。推荐使用最新版 Chrome、Edge 或其他支持 WebGPU 的现代浏览器。</p></div></div>;
   }
