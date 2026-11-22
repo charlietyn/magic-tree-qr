@@ -5,7 +5,8 @@ en la rama **feat/mtq-master-plan-v2-qr-integrity** de **charlietyn/magic-tree-q
 
 Esta rama incorpora: codificador QR separado del código React/WebGPU; validación
 centralizada; protección de enlaces y sesión; preservación exacta del contenido; QR
-estándar PNG/SVG; alternativa 2D sin WebGPU; límites de importación y tests unitarios.
+estándar PNG/SVG/ZIP; alternativa 2D sin WebGPU; importación limitada; protección
+contra enlaces corruptos, ZIP de evidencias y tests unitarios/de integración.
 
 **No están completas las nueve fases.** Todavía faltan pruebas de compilación,
 escaneo real de imágenes, ejecución en navegadores y regresión visual de estaciones.
@@ -15,14 +16,16 @@ escaneo real de imágenes, ejecución en navegadores y regresión visual de esta
     git clone https://github.com/charlietyn/magic-tree-qr.git
     cd magic-tree-qr
     git switch feat/mtq-master-plan-v2-qr-integrity
-    npm ci
-    npm test
-    npm run build
+    npm run verify:local -- --install
     npm run dev
+
+El verificador crea un ZIP privado con logs, SHA-256 y estado real de las pruebas.
 
 [Estado verificable del plan V2](docs/development/MTQ_V2_EXECUTION_STATUS.md) ·
 [Diagnóstico inicial](docs/architecture/MTQ_V2_BASELINE.md) ·
-[Arquitectura modular](docs/architecture/MTQ_V2_ARCHITECTURE.md)
+[Arquitectura modular](docs/architecture/MTQ_V2_ARCHITECTURE.md) ·
+[QA manual](docs/development/MTQ_V2_MANUAL_QA.md) ·
+[Verificación local](docs/development/MTQ_V2_LOCAL_VALIDATION.md)
 
 ---
 

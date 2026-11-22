@@ -11,12 +11,12 @@
 |---|---|---|
 | 0 Diagnóstico | PARCIAL | Mapa estático de módulos y código empaquetado; referencias gráficas reales pendientes. |
 | 1 Integridad QR | AVANZADA | Sin fallback silencioso; payload original; codec/estado inicial protegidos. Falta round-trip independiente en navegador y cerrar carreras. |
-| 2 Testing | PARCIAL | Tests Node redactados; ejecución npm test pendiente. V8 smoke 12/12. Faltan RTL/Playwright/visuales. |
-| 3 Arquitectura | PARCIAL | Codificador vendorizado extraído de src/main.jsx. React, geometría y GPU todavía acoplados. |
+| 2 Testing | PARCIAL | Tests Node unitarios y round-trip independiente con jsQR; ejecución npm test pendiente. V8 12/12 QR y 8/8 ZIP. Faltan Vitest/RTL/Playwright/visuales. |
+| 3 Arquitectura | PARCIAL | Codificador original y 52 estilos React extraídos. React y GPU siguen compartiendo el monolito; hay un único dispatcher para modo 2D. |
 | 4 Correcciones | PARCIAL | Importación limitada y manejo de errores; manifiesto usa iconos existentes. Pendiente audio y paleta invernal. |
-| 5 WebGPU | PARCIAL | Modo QR 2D para ausencia/fallo del dispositivo; optimización profunda pendiente. |
-| 6 Funcionalidades | PARCIAL | QR estándar PNG/SVG, exportación artística preservada. ZIP, galería, lotes, etc. pendientes. |
-| 7 Consolidación | PENDIENTE | Sin pruebas multi-navegador, accesibilidad y regresión visual. |
+| 5 WebGPU | PARCIAL | QR 2D sin GPU, tratamiento de device loss, suspensión RAF en pestaña oculta y limpieza al desmontar. Falta probarlo en hardware real. |
+| 6 Funcionalidades | PARCIAL | PNG/SVG estándar y paquete ZIP sin dependencias en 3D y 2D. Galería, lotes, presets, i18n pendientes. |
+| 7 Consolidación | PENDIENTE | Menú compartir con botones de teclado y aviso de privacidad. Falta auditoría completa, multi-navegador y regresión visual. |
 | 8 Diseños nuevos | BLOQUEADA | No se empieza hasta finalizar las anteriores. |
 
 ## Cambios reales realizados
@@ -28,24 +28,32 @@
 - src/components/StandardQRMode.jsx ofrece editor y exportación sin WebGPU.
 - src/main.jsx conecta servicios, deshabilita compartir durante borradores no confirmados, protege carga de imágenes y atiende fallos de GPU.
 - public/favicon/site.webmanifest ahora apunta a recursos presentes en Git; aún faltan iconos PNG 192/512 para validar instalación PWA.
-- tests/unit contiene tests de codificación real, errores, exportación, serialización y manifiesto.
+- src/styles/treeStyles.js conserva intactos los 52 grupos de estilos originales; tests/unit valida la extracción.
+- src/features/export/zipWriter.js crea ZIP32 con CRC32, nombres seguros y límite de tamaño.
+- tests/integration/roundTrip.test.js prueba la lectura QR con jsQR, independiente del codificador original.
+- tests/unit contiene suites para codificación real, errores, exportación, serialización, manifiesto, límites React y ZIP.
+- tools/verify-local.mjs permite ejecutar npm ci, npm test, npm run build y descargar ZIP privado con logs/hashes.
+- El botón compartir muestra una advertencia: Base64 no cifra datos; la app deja de publicar automáticamente el payload en la URL.
 
 ## Pruebas realmente ejecutadas
 
-**12/12 afirmaciones de integración lógica correctas**, en motor V8 aislado
-con adaptadores para API de codificación, URL y Base64. Comprobadas: codificador real,
-Unicode, capacidad artística y estándar, QR SVG, token compartido, sesión y enlace
-corrupto. **No se ejecutaron** npm test, npm run build, Playwright, tests GPU,
-ni escaneo QR desde una imagen exportada.
+**12/12 comprobaciones QR y 8/8 comprobaciones ZIP correctas** en motor V8 aislado.
+Para el QR se utilizaron adaptadores de API de navegador. También se verificó
+con el codificador real la capacidad 2D (177 módulos), la preservación Unicode,
+la serialización y los enlaces corruptos. Las nuevas suites Node de jsQR y ZIP
+**están escritas pero no ejecutadas en el clon completo**. No se ha ejecutado
+npm test, npm run build, Playwright, captura de cuatro estaciones ni escaneo real
+con cámara. No se asume compatibilidad de navegador sin esas pruebas.
 
 ## Validación pendiente para cerrar MTQ-0002/0003/1005/1006
 
 Ejecutar desde la raíz:
 
-    npm ci
-    npm test
-    npm run build
+    npm run verify:local -- --install
     npm run dev
+
+El primer comando crea un ZIP de evidencias privadas con salida de compilación
+y pruebas en tools/reports/mtq-v2/. Consultar MTQ_V2_MANUAL_QA.md.
 
 Escenarios críticos: URL y Unicode exactos; QR con espacios y saltos de línea;
 enlaces /s/ y ?q= corruptos; contenido de 500 caracteres (rechazo artístico y
@@ -56,7 +64,7 @@ en vista 3D/cenital y dispositivos móviles.
 ## Riesgos abiertos
 
 La escena artística no tiene garantía universal de ser escaneable.
-El archivo React/GPu sigue siendo monolítico y sus shaders no se han modificado.
+El núcleo React/WebGPU sigue mayoritariamente monolítico y los shaders no se han modificado.
 Audio otoño/invierno contiene el mismo blob Git; se necesitan activos de audio
 diferenciados. Personalización invernal pendiente de referencias gráficas.
 Pueden existir fugas del motor GPU y regresiones no descubiertas por pruebas
@@ -65,7 +73,7 @@ estáticas. El soporte PWA completo requiere iconos de mayor resolución.
 ## Próximo trabajo, según las dependencias del plan
 
 1. MTQ-0002/0003: compilar, probar manualmente y capturar baseline GPU/visual.
-2. MTQ-1005/1006: pruebas independientes de lectura QR y carreras de estados.
+2. MTQ-1005/1006: ejecutar la suite independiente jsQR y certificar carreras de estados en navegador.
 3. MTQ-2002/2003: React Testing Library / pruebas de navegador.
 4. MTQ-3003+: extracciones pequeñas de estado, UI, geometría y shaders.
 5. Fases 4 a 7 restantes; Fase 8 opcional y estrictamente al final.
