@@ -14790,7 +14790,8 @@ var Q = {
   b: 0.5
 };
 var K = "https://ppweilai.online/";
-var qrService = createQRService(originalQrEncoder);
+var qrService = createQRService(originalQrEncoder); // Artistic renderer: up to 41 modules.
+var standardQRService = createQRService(originalQrEncoder, {maxMatrixSize: 177});
 function J(_0x8f69b8) {
   return "vec3f(" + _0x8f69b8.r.toFixed(6) + ", " + _0x8f69b8.g.toFixed(6) + ", " + _0x8f69b8.b.toFixed(6) + ")";
 }
@@ -17892,7 +17893,7 @@ function _Component() {
               backgroundColor: _0x13972f.color
             }} key={_0x33296b} />)}</div></div>}</div>}<div ref={_0x4efbdf} style={Te.creditsHintWrap}><a href="https://github.com/xscanzm/magic-tree-qr" target="_blank" rel="noopener noreferrer" aria-label="查看 GitHub 开源仓库" title="GitHub 开源仓库 (xscanzm/magic-tree-qr)" style={Te.githubButton}>{Ae.github}</a>{_0x2b80c3 && <div style={Te.creditsHintTooltip}><div style={Te.creditsHintArrow} /><div style={Te.creditsHintCard}><div style={{ fontWeight: 700, fontSize: 12, marginBottom: 4, color: "#3f3328" }}>3D 艺术二维码生成器</div><div style={{ color: "#6e5d4e", marginBottom: 6 }}>点击树木可俯视查看扫码二维码<br />支持春季 · 夏季 · 秋季 · 冬季</div><div style={{ borderTop: "1px solid rgba(158, 142, 121, 0.22)", paddingTop: 6, marginBottom: 6 }}><span style={{ fontWeight: 600 }}>开源仓库：</span><a href="https://github.com/xscanzm/magic-tree-qr" target="_blank" rel="noopener noreferrer" style={Te.creditsHintLink}>github.com/xscanzm/magic-tree-qr</a></div><div style={{ borderTop: "1px solid rgba(158, 142, 121, 0.15)", paddingTop: 5, display: "flex", justifyContent: "space-between", color: "#8a7a6b", fontSize: 10 }}><span>致敬 <a href="https://icqr.com" target="_blank" rel="noopener noreferrer" style={Te.creditsHintLink}>icqr</a></span><span>汉化 & 重构 <strong>xscanzm</strong></span></div></div></div>}<button type="button" aria-label="查看项目说明与开源信息" title="项目说明 & 开源信息" onClick={() => _0x23dd65(_0x3b08aa => !_0x3b08aa)} style={Te.creditsHintButton}>{Ae.info}</button></div></div>;
   } else {
-    return <StandardQRMode initialPayload={_0x14b306} qrService={qrService} />;
+    return <StandardQRMode initialPayload={_0x14b306} qrService={standardQRService} />;
   }
 }
 var Ve = document.getElementById("root");

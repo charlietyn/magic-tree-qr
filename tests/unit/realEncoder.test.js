@@ -35,3 +35,13 @@ test("oversize payload cannot silently become the default URL", () => {
   assert.equal(output.payload, payload);
   assert.equal(output.matrix, null);
 });
+
+test("standard QR mode can encode data too large for the 3D renderer", () => {
+  const payload = "A".repeat(500);
+  const artistic = service.generate(payload);
+  const standard = createQRService(originalQrEncoder, {maxMatrixSize: 177}).generate(payload);
+  assert.equal(artistic.code, QR_ERRORS.CAPACITY);
+  assert.equal(standard.success, true);
+  assert.equal(standard.payload, payload);
+  assert.equal(standard.size, 73);
+});
