@@ -24,3 +24,6 @@ test_*.js
 Thumbs.db
 .vscode/
 .idea/
+
+# Local-only verification archives
+tools/reports/mtq-v2/
