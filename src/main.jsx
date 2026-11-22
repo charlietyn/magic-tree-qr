@@ -16508,12 +16508,16 @@ function _Component() {
     _0x5bd40a.current = [_0x4d37f5.rgb[0], _0x4d37f5.rgb[1], _0x4d37f5.rgb[2], 1];
   }
   (0, m.useEffect)(() => {
-    sessionStorage.setItem(Ie, JSON.stringify({
-      url: _0x16eae2,
-      season: _0x153546,
-      palette: _0x2d9aad,
-      muted: _0x1b8033
-    }));
+    try {
+      sessionStorage.setItem(Ie, JSON.stringify({
+        url: _0x16eae2,
+        season: _0x153546,
+        palette: _0x2d9aad,
+        muted: _0x1b8033
+      }));
+    } catch {
+      // Storage may be blocked by the browser.
+    }
     if (!Ue(_0x16eae2).valid) return; // No sharing token for an invalid QR document.
     const _0x22e55c = _0x16eae2 === "https://ppweilai.online/" && _0x153546 === 1 && _0x2d9aad === -1;
     const _0x12a439 = Oe(_0x16eae2, _0x153546, _0x2d9aad);
@@ -16525,7 +16529,10 @@ function _Component() {
   const _0x175ba0 = _0x1bb750.width >= 900;
   const _0x1487f1 = !_0x25978d && _0x3744d8 && !!_0x3e9140;
   const _0x32e13e = _e && _0x1bb750.isMobile && _0xd36b8b === 0 ? 56 : 0;
-  const _0x1ecde7 = _0x1487f1 ? _0x3e9140 : _0x446d01 ? "点击查看3D树" : "点击树木查看扫码二维码";
+  const _0x1ecde7 = _0x1487f1 ? _0x3e9140 :
+    !canShareCurrentQR && _0x14b306 !== _0x16eae2
+      ? "Vista anterior: el nuevo QR se está validando"
+      : _0x446d01 ? "点击查看3D树" : "点击树木查看扫码二维码";
   (0, m.useEffect)(() => {
     if (!_0x1bb750.isMobile || !_0x469f6b) {
       return;
@@ -17771,9 +17778,12 @@ function _Component() {
               if (_0x58638c.current) {
                 clearTimeout(_0x58638c.current);
               }
-              if (_0x2dd6d3.trim().length === 0 || _0x48575b) {
+              if (_0x48575b) {
                 _0x5559b9(false);
                 _0x182d75("");
+              } else if (_0x2dd6d3.trim().length === 0) {
+                _0x5559b9(true);
+                _0x182d75("Introduce un texto o una URL válida para generar el QR.");
               } else {
                 _0x58638c.current = setTimeout(() => {
                   const _0x5ac74e = Ue(_0x2dd6d3);
