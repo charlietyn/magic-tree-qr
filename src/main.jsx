@@ -1,6 +1,7 @@
 import jsQR from "jsqr";
 import { createQRService } from "./core/qr/qrService.js";
 import originalQrEncoder from "./core/qr/vendor/qrEncoder.js";
+import { decodeBase64URL as Be, encodeShareToken as Oe, decodeShareToken as Fe } from "./core/qr/shareCodec.js";
 import StandardQRMode from "./components/StandardQRMode.jsx";
 var e = Object.create;
 var t = Object.defineProperty;
@@ -16243,47 +16244,6 @@ var Re = ["/audio/spring.mp3", "/audio/summer.mp3", "/audio/autumn.mp3", "/audio
 var Ie = "qrtree";
 var De = /iP(hone|ad|od)/.test(navigator.userAgent);
 var _e = /Android/i.test(navigator.userAgent);
-function Be(_0x13188a) {
-  try {
-    const _0x368b02 = _0x13188a.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((_0x13188a.length + 3) % 4);
-    const _0x35d92e = atob(_0x368b02);
-    const _0x1dabb7 = new Uint8Array(_0x35d92e.length);
-    for (let _0x2ecd85 = 0; _0x2ecd85 < _0x35d92e.length; _0x2ecd85++) {
-      _0x1dabb7[_0x2ecd85] = _0x35d92e.charCodeAt(_0x2ecd85);
-    }
-    return new TextDecoder().decode(_0x1dabb7);
-  } catch {
-    return null;
-  }
-}
-function Oe(_0x4e094d, _0x20fa5a, _0x161d61) {
-  return function (_0x1a0307) {
-    const _0xbf1fc4 = new TextEncoder().encode(_0x1a0307);
-    let _0x20fc94 = "";
-    for (let _0x458d92 = 0; _0x458d92 < _0xbf1fc4.length; _0x458d92++) {
-      _0x20fc94 += String.fromCharCode(_0xbf1fc4[_0x458d92]);
-    }
-    return btoa(_0x20fc94).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
-  }(String(_0x20fa5a) + String(_0x161d61 + 1) + _0x4e094d);
-}
-function Fe(_0x49e8af) {
-  const _0x1f805c = Be(_0x49e8af);
-  if (!_0x1f805c || _0x1f805c.length < 3) {
-    return null;
-  }
-  const _0x528591 = Number(_0x1f805c[0]);
-  const _0x12eb57 = Number(_0x1f805c[1]) - 1;
-  const _0x1cdc4e = _0x1f805c.slice(2);
-  if (Number.isFinite(_0x528591) && Number.isFinite(_0x12eb57)) {
-    return {
-      url: _0x1cdc4e,
-      season: Math.min(3, Math.max(0, _0x528591)),
-      palette: Math.min(5, Math.max(-1, _0x12eb57))
-    };
-  } else {
-    return null;
-  }
-}
 function Ue(payload) {
   // All entry points use the same encoder and capacity policy.
   return qrService.validate(payload);
