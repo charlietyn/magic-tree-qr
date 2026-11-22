@@ -1,4 +1,6 @@
 import jsQR from "jsqr";
+import { createQRService } from "./core/qr/qrService.js";
+import StandardQRMode from "./components/StandardQRMode.jsx";
 var e = Object.create;
 var t = Object.defineProperty;
 var n = Object.getOwnPropertyDescriptor;
@@ -16360,32 +16362,16 @@ var Q = {
   b: 0.5
 };
 var K = "https://ppweilai.online/";
+var qrService = createQRService(Y);
 function J(_0x8f69b8) {
   return "vec3f(" + _0x8f69b8.r.toFixed(6) + ", " + _0x8f69b8.g.toFixed(6) + ", " + _0x8f69b8.b.toFixed(6) + ")";
 }
-function ee(_0x207145) {
-  try {
-    const {
-      modules: _0x441361
-    } = Y.create(_0x207145 || "https://ppweilai.online/", {
-      errorCorrectionLevel: "M"
-    });
-    const {
-      size: _0x4fe257
-    } = _0x441361;
-    const _0x5a0fde = [];
-    for (let _0x470d50 = 0; _0x470d50 < _0x4fe257; _0x470d50++) {
-      const _0x1ae87b = [];
-      for (let _0x4b15a7 = 0; _0x4b15a7 < _0x4fe257; _0x4b15a7++) {
-        _0x1ae87b.push(_0x441361.get(_0x4b15a7, _0x470d50) === 1);
-      }
-      _0x5a0fde.push(_0x1ae87b);
-    }
-    return _0x5a0fde;
-  } catch {
-    return ee(K);
-  }
+function ee(payload) {
+  // Never substitute a user-provided payload with the default URL.
+  const result = qrService.generate(payload);
+  return result.success ? result.matrix : null;
 }
+
 var te = function (_0x493478) {
   _0x493478[_0x493478.Dirt = 0] = "Dirt";
   _0x493478[_0x493478.CherryBlossom = 1] = "CherryBlossom";
@@ -17873,36 +17859,11 @@ function Fe(_0x49e8af) {
     return null;
   }
 }
-function Ue(_0x371247) {
-  const _0x53652d = _0x371247.trim();
-  if (_0x53652d.length === 0) {
-    return {
-      valid: false,
-      error: ""
-    };
-  }
-  try {
-    const { modules: _0xccaa7a } = Y.create(_0x53652d, {
-      errorCorrectionLevel: "M"
-    });
-    if (_0xccaa7a.size > 41) {
-      return {
-        valid: false,
-        error: "内容过长，无法生成树状二维码（建议精简字数）"
-      };
-    } else {
-      return {
-        valid: true,
-        error: ""
-      };
-    }
-  } catch {
-    return {
-      valid: false,
-      error: "内容格式不支持或超出限制"
-    };
-  }
+function Ue(payload) {
+  // All entry points use the same encoder and capacity policy.
+  return qrService.validate(payload);
 }
+
 function _Component() {
   const _0x5d9fc1 = function () {
     try {
@@ -17957,6 +17918,7 @@ function _Component() {
       };
     }
   }();
+  const initialQRValidation = Ue(_0x5d9fc1.url);
   const [_0x1bb750, _0x8d8406] = (0, m.useState)({
     width: 0,
     height: 0,
@@ -17970,9 +17932,9 @@ function _Component() {
   const [_0x446d01, _0x31ca17] = (0, m.useState)(false);
   const [_0x14b306, _0x4a3a07] = (0, m.useState)(_0x5d9fc1.url);
   const [_0x16eae2, _0x1c2177] = (0, m.useState)(_0x5d9fc1.url);
-  const [_0x3744d8, _0x5559b9] = (0, m.useState)(false);
-  const [_0x3e9140, _0x182d75] = (0, m.useState)("");
-  const [_0x570a8a, _0x444573] = (0, m.useState)(Ue(_0x5d9fc1.url).valid);
+  const [_0x3744d8, _0x5559b9] = (0, m.useState)(!initialQRValidation.valid);
+  const [_0x3e9140, _0x182d75] = (0, m.useState)(initialQRValidation.error);
+  const [_0x570a8a, _0x444573] = (0, m.useState)(initialQRValidation.valid);
   const _0x3129c7 = (0, m.useRef)(_0x5d9fc1.season);
   const [_0x153546, _0x49fe52] = (0, m.useState)(_0x5d9fc1.season);
   const _0x5bd40a = (0, m.useRef)([0, 0, 0, 0]);
@@ -18013,11 +17975,13 @@ function _Component() {
           inversionAttempts: "attemptBoth"
         });
         if (res && res.data) {
-          const decoded = res.data.trim();
+          const decoded = res.data;
           _0x4a3a07(decoded);
           const { valid, error } = Ue(decoded);
           _0x444573(valid);
           if (valid) {
+            _0x4457f4.current = "";
+            _0x23d318("");
             _0x2f2fa6.current = decoded;
             _0x1c2177(decoded);
             _0x5559b9(false);
@@ -18202,6 +18166,7 @@ function _Component() {
     const _0xc83661 = _0x25978d ? "/s/" + _0x12a439 : _0x22e55c ? "/" : "?q=" + _0x12a439;
     window.history.replaceState(null, "", _0xc83661);
   }, [_0x16eae2, _0x153546, _0x2d9aad, _0x1b8033, _0x25978d]);
+  const canShareCurrentQR = _0x570a8a && _0x14b306 === _0x16eae2;
   const _0x23bdbd = _0x446d01 && _0x52efb9 && !!_0x1f990f;
   const _0x175ba0 = _0x1bb750.width >= 900;
   const _0x1487f1 = !_0x25978d && _0x3744d8 && !!_0x3e9140;
@@ -18342,6 +18307,11 @@ function _Component() {
         return;
       }
       const _0x395d73 = ee(_0x582982);
+      if (!_0x395d73) {
+        if (_0x1ddb2b) _0x1ddb2b.current = "";
+        _0x1e3edc?.current?.("");
+        return;
+      }
       const _0x4340e1 = ae(_0x395d73);
       const _0xb533ad = ie(_0x395d73);
       _0x43f2cb.current = _0x395d73;
@@ -18361,6 +18331,9 @@ function _Component() {
     const _0x354f89 = (0, m.useCallback)(async () => {
       try {
         if (_0x27739d.current || _0x9a37bd.current) {
+          return;
+        }
+        if (!Ue(_0x2323cd.current).valid) {
           return;
         }
         if (_0x1b3318 <= 0 || _0x1f69fa <= 0) {
@@ -18845,6 +18818,7 @@ function _Component() {
         _0x27739d.current = _0x2c9dd9;
         _0x6f8fc9.current = _0x3404a9;
         const _0xed02d6 = ee(_0x2323cd.current);
+        if (!_0xed02d6) return;
         const _0x4f57c1 = ae(_0xed02d6);
         const _0x3921ec = ie(_0xed02d6);
         _0x43f2cb.current = _0xed02d6;
@@ -19143,6 +19117,7 @@ function _Component() {
     }
   }, [_0x1f990f]);
   const _0x274176 = async () => {
+    if (!canShareCurrentQR) return;
     if (("ontouchstart" in window || navigator.maxTouchPoints > 0) && navigator.share) {
       const _0xdc862d = _0x572d25();
       const _0x24ddab = await _0x4694ab();
@@ -19171,6 +19146,7 @@ function _Component() {
     }
   };
   const _0x1f6acc = () => {
+    if (!canShareCurrentQR) return;
     navigator.clipboard?.writeText(_0x572d25()).then(() => {
       _0x270590("link");
       setTimeout(() => _0x270590(null), 1500);
@@ -19180,6 +19156,7 @@ function _Component() {
     _0x44580a(null);
   };
   const _0x228c85 = async () => {
+    if (!canShareCurrentQR) return;
     const _0x4ad5b9 = _0x4457f4.current || _0x1f990f;
     if (!_0x4ad5b9) {
       return;
@@ -19263,7 +19240,7 @@ function _Component() {
     const _0x41d93c = window.setTimeout(() => _0x23dd65(false), 5000);
     return () => window.clearTimeout(_0x41d93c);
   }, [_0x2b80c3]);
-  const _0x471049 = _0x1aa996 => <div style={Te.sharePopoverWrap}><button onClick={_0x274176} aria-label={_0x1aa996} title={_0x1aa996} style={Te.shareBtn}>{Ae.share}</button>{_0xdbc765 && <ze.Fragment><div style={Te.sharePopoverBackdrop} onClick={() => {
+  const _0x471049 = _0x1aa996 => <div style={Te.sharePopoverWrap}><button onClick={_0x274176} disabled={!canShareCurrentQR} aria-label={_0x1aa996} title={_0x1aa996} style={Te.shareBtn}>{Ae.share}</button>{_0xdbc765 && <ze.Fragment><div style={Te.sharePopoverBackdrop} onClick={() => {
         _0xdd5148(false);
         _0x44580a(null);
       }} /><div style={Te.sharePopover}><div role="button" tabIndex={0} style={{
@@ -19430,7 +19407,9 @@ function _Component() {
               }
               if (_0x48575b) {
                 _0xca890e.current = setTimeout(() => {
-                  const _0x5cbaf1 = _0x2dd6d3.trim();
+                  const _0x5cbaf1 = _0x2dd6d3;
+                  _0x4457f4.current = "";
+                  _0x23d318("");
                   _0x2f2fa6.current = _0x5cbaf1;
                   _0x1c2177(_0x5cbaf1);
                 }, 700);
@@ -19448,7 +19427,9 @@ function _Component() {
                     valid: _0x175ec3
                   } = Ue(_0x3b7929);
                   if (_0x175ec3) {
-                    const _0x2338fa = _0x3b7929.trim();
+                    const _0x2338fa = _0x3b7929;
+                    _0x4457f4.current = "";
+                    _0x23d318("");
                     _0x2f2fa6.current = _0x2338fa;
                     _0x1c2177(_0x2338fa);
                   }
@@ -19495,7 +19476,7 @@ function _Component() {
               backgroundColor: _0x13972f.color
             }} key={_0x33296b} />)}</div></div>}</div>}<div ref={_0x4efbdf} style={Te.creditsHintWrap}><a href="https://github.com/xscanzm/magic-tree-qr" target="_blank" rel="noopener noreferrer" aria-label="查看 GitHub 开源仓库" title="GitHub 开源仓库 (xscanzm/magic-tree-qr)" style={Te.githubButton}>{Ae.github}</a>{_0x2b80c3 && <div style={Te.creditsHintTooltip}><div style={Te.creditsHintArrow} /><div style={Te.creditsHintCard}><div style={{ fontWeight: 700, fontSize: 12, marginBottom: 4, color: "#3f3328" }}>3D 艺术二维码生成器</div><div style={{ color: "#6e5d4e", marginBottom: 6 }}>点击树木可俯视查看扫码二维码<br />支持春季 · 夏季 · 秋季 · 冬季</div><div style={{ borderTop: "1px solid rgba(158, 142, 121, 0.22)", paddingTop: 6, marginBottom: 6 }}><span style={{ fontWeight: 600 }}>开源仓库：</span><a href="https://github.com/xscanzm/magic-tree-qr" target="_blank" rel="noopener noreferrer" style={Te.creditsHintLink}>github.com/xscanzm/magic-tree-qr</a></div><div style={{ borderTop: "1px solid rgba(158, 142, 121, 0.15)", paddingTop: 5, display: "flex", justifyContent: "space-between", color: "#8a7a6b", fontSize: 10 }}><span>致敬 <a href="https://icqr.com" target="_blank" rel="noopener noreferrer" style={Te.creditsHintLink}>icqr</a></span><span>汉化 & 重构 <strong>xscanzm</strong></span></div></div></div>}<button type="button" aria-label="查看项目说明与开源信息" title="项目说明 & 开源信息" onClick={() => _0x23dd65(_0x3b08aa => !_0x3b08aa)} style={Te.creditsHintButton}>{Ae.info}</button></div></div>;
   } else {
-    return <div style={Te.container}><div style={Te.errorMessage}><h2>当前浏览器不支持 WebGPU</h2><p>本程序需要 WebGPU 支持。推荐使用最新版 Chrome、Edge 或其他支持 WebGPU 的现代浏览器。</p></div></div>;
+    return <StandardQRMode initialPayload={_0x5d9fc1.url} qrService={qrService} />;
   }
 }
 var Ve = document.getElementById("root");
