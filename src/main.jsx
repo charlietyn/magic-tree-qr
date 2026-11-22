@@ -17729,26 +17729,26 @@ function _Component() {
   const _0x471049 = _0x1aa996 => <div style={Te.sharePopoverWrap}><button onClick={_0x274176} disabled={!canShareCurrentQR} aria-label={_0x1aa996} title={_0x1aa996} style={Te.shareBtn}>{Ae.share}</button>{_0xdbc765 && <ze.Fragment><div style={Te.sharePopoverBackdrop} onClick={() => {
         _0xdd5148(false);
         _0x44580a(null);
-      }} /><div style={Te.sharePopover}><div role="button" tabIndex={0} style={{
+      }} /><div style={Te.sharePopover}><button type="button" style={{textAlign:"left",width:"100%",cursor:"pointer",
           ...Te.sharePopoverItem,
           ...(_0x32b6de === "link" ? Te.sharePopoverItemHover : {})
-        }} onMouseEnter={() => _0x44580a("link")} onMouseLeave={() => _0x44580a(null)} onClick={_0x1f6acc}><span style={Te.sharePopoverIcon}>{_0xcc6554 === "link" ? Ae.check : Ae.copyLink}</span>{_0xcc6554 === "link" ? "已复制!" : "复制链接"}</div><div role="button" tabIndex={0} style={{
+        }} onMouseEnter={() => _0x44580a("link")} onMouseLeave={() => _0x44580a(null)} onClick={_0x1f6acc}><span style={Te.sharePopoverIcon}>{_0xcc6554 === "link" ? Ae.check : Ae.copyLink}</span>{_0xcc6554 === "link" ? "已复制!" : "复制链接"}</button><button type="button" style={{textAlign:"left",width:"100%",cursor:"pointer",
           ...Te.sharePopoverItem,
           ...(_0x32b6de === "download" ? Te.sharePopoverItemHover : {})
-        }} onMouseEnter={() => _0x44580a("download")} onMouseLeave={() => _0x44580a(null)} onClick={_0x228c85}><span style={Te.sharePopoverIcon}>{Ae.download}</span>Descargar arte PNG</div><button type="button" onClick={() => downloadStandardQR("png")} style={{...Te.sharePopoverItem, width:"100%", cursor:"pointer"}}><span style={Te.sharePopoverIcon}>{Ae.download}</span>QR estándar PNG</button><button type="button" onClick={() => downloadStandardQR("svg")} style={{...Te.sharePopoverItem, width:"100%", cursor:"pointer"}}><span style={Te.sharePopoverIcon}>{Ae.download}</span>QR estándar SVG</button><button type="button" onClick={downloadExportPackage} style={{...Te.sharePopoverItem,width:"100%",cursor:"pointer"}}><span style={Te.sharePopoverIcon}>{Ae.download}</span>Paquete ZIP QR + arte</button><div style={{
+        }} onMouseEnter={() => _0x44580a("download")} onMouseLeave={() => _0x44580a(null)} onClick={_0x228c85}><span style={Te.sharePopoverIcon}>{Ae.download}</span>Descargar arte PNG</button><button type="button" onClick={() => downloadStandardQR("png")} style={{...Te.sharePopoverItem, width:"100%", cursor:"pointer"}}><span style={Te.sharePopoverIcon}>{Ae.download}</span>QR estándar PNG</button><button type="button" onClick={() => downloadStandardQR("svg")} style={{...Te.sharePopoverItem, width:"100%", cursor:"pointer"}}><span style={Te.sharePopoverIcon}>{Ae.download}</span>QR estándar SVG</button><button type="button" onClick={downloadExportPackage} style={{...Te.sharePopoverItem,width:"100%",cursor:"pointer"}}><span style={Te.sharePopoverIcon}>{Ae.download}</span>Paquete ZIP QR + arte</button><div style={{
           height: 1,
           margin: "2px 8px",
           background: "rgba(158, 142, 121, 0.15)"
-        }} /><div role="button" tabIndex={0} style={{
+        }} /><button type="button" style={{textAlign:"left",width:"100%",cursor:"pointer",
           ...Te.sharePopoverItem,
           ...(_0x32b6de === "x" ? Te.sharePopoverItemHover : {})
-        }} onMouseEnter={() => _0x44580a("x")} onMouseLeave={() => _0x44580a(null)} onClick={_0x305892}><span style={Te.sharePopoverIcon}>{Ae.x}</span>Share on X</div><div role="button" tabIndex={0} style={{
+        }} onMouseEnter={() => _0x44580a("x")} onMouseLeave={() => _0x44580a(null)} onClick={_0x305892}><span style={Te.sharePopoverIcon}>{Ae.x}</span>Share on X</button><button type="button" style={{textAlign:"left",width:"100%",cursor:"pointer",
           ...Te.sharePopoverItem,
           ...(_0x32b6de === "facebook" ? Te.sharePopoverItemHover : {})
-        }} onMouseEnter={() => _0x44580a("facebook")} onMouseLeave={() => _0x44580a(null)} onClick={_0x4d5637}><span style={Te.sharePopoverIcon}>{Ae.facebook}</span>Share on Facebook</div><div role="button" tabIndex={0} style={{
+        }} onMouseEnter={() => _0x44580a("facebook")} onMouseLeave={() => _0x44580a(null)} onClick={_0x4d5637}><span style={Te.sharePopoverIcon}>{Ae.facebook}</span>Share on Facebook</button><button type="button" style={{textAlign:"left",width:"100%",cursor:"pointer",
           ...Te.sharePopoverItem,
           ...(_0x32b6de === "whatsapp" ? Te.sharePopoverItemHover : {})
-        }} onMouseEnter={() => _0x44580a("whatsapp")} onMouseLeave={() => _0x44580a(null)} onClick={_0x4a5592}><span style={Te.sharePopoverIcon}>{Ae.whatsapp}</span>Share on WhatsApp</div></div></ze.Fragment>}</div>;
+        }} onMouseEnter={() => _0x44580a("whatsapp")} onMouseLeave={() => _0x44580a(null)} onClick={_0x4a5592}><span style={Te.sharePopoverIcon}>{Ae.whatsapp}</span>Share on WhatsApp</button></div></ze.Fragment>}</div>;
   const _0x1ef1fa = () => {
     const raw = _0x16eae2.trim();
     if (/^https?:\/\//i.test(raw)) {
