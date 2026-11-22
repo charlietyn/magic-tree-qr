@@ -28,7 +28,7 @@ for (const [payload, size, black, hash] of cases) {
   });
 }
 test("oversize payload cannot silently become the default URL", () => {
-  const payload = " ".repeat(1000);
+  const payload = "X".repeat(1000);
   const output = service.generate(payload);
   assert.equal(output.success, false);
   assert.equal(output.code, QR_ERRORS.CAPACITY);
