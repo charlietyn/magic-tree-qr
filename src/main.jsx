@@ -5,6 +5,7 @@ import { encodeShareToken as Oe } from "./core/qr/shareCodec.js";
 import { readInitialQRState } from "./core/qr/initialState.js";
 import { createQRStandardSVG, createQRStandardPNGDataURL } from "./core/qr/qrExport.js";
 import StandardQRMode from "./components/StandardQRMode.jsx";
+import { createZip, pngDataURLToBytes } from "./features/export/zipWriter.js";
 var e = Object.create;
 var t = Object.defineProperty;
 var n = Object.getOwnPropertyDescriptor;
@@ -17600,6 +17601,46 @@ function _Component() {
       if (url?.startsWith("blob:")) setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
   };
+  const downloadExportPackage = () => {
+    if (!canShareCurrentQR) return;
+    let url = null;
+    try {
+      const generated = qrService.generate(_0x16eae2);
+      if (!generated.success) throw new Error(generated.error);
+      const svg = createQRStandardSVG(generated.matrix);
+      const png = createQRStandardPNGDataURL(generated.matrix);
+      const metadata = {
+        version: 1,
+        payload: generated.payload,
+        qrSize: generated.size,
+        errorCorrectionLevel: generated.errorCorrectionLevel,
+        season: _0x153546,
+        palette: _0x2d9aad,
+        artIncluded: Boolean(_0x4457f4.current?.startsWith("data:image/png;base64,"))
+      };
+      const entries = [
+        {name: "qr-standard.png", data: pngDataURLToBytes(png)},
+        {name: "qr-vector.svg", data: new TextEncoder().encode(svg)},
+        {name: "metadata.json", data: new TextEncoder().encode(JSON.stringify(metadata, null, 2))}
+      ];
+      if (metadata.artIncluded) {
+        entries.push({name: "tree-art.png", data: pngDataURLToBytes(_0x4457f4.current)});
+      }
+      url = URL.createObjectURL(new Blob([createZip(entries)], {type: "application/zip"}));
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = "magic-tree-qr-export.zip";
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      _0xdd5148(false);
+      _0x44580a(null);
+    } catch (error) {
+      window.alert("No se pudo preparar el ZIP: " + String(error?.message ?? error));
+    } finally {
+      if (url) setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+  };
   const _0x228c85 = async () => {
     if (!canShareCurrentQR) return;
     const _0x4ad5b9 = _0x4457f4.current || _0x1f990f;
@@ -17694,7 +17735,7 @@ function _Component() {
         }} onMouseEnter={() => _0x44580a("link")} onMouseLeave={() => _0x44580a(null)} onClick={_0x1f6acc}><span style={Te.sharePopoverIcon}>{_0xcc6554 === "link" ? Ae.check : Ae.copyLink}</span>{_0xcc6554 === "link" ? "已复制!" : "复制链接"}</div><div role="button" tabIndex={0} style={{
           ...Te.sharePopoverItem,
           ...(_0x32b6de === "download" ? Te.sharePopoverItemHover : {})
-        }} onMouseEnter={() => _0x44580a("download")} onMouseLeave={() => _0x44580a(null)} onClick={_0x228c85}><span style={Te.sharePopoverIcon}>{Ae.download}</span>Descargar arte PNG</div><button type="button" onClick={() => downloadStandardQR("png")} style={{...Te.sharePopoverItem, width:"100%", cursor:"pointer"}}><span style={Te.sharePopoverIcon}>{Ae.download}</span>QR estándar PNG</button><button type="button" onClick={() => downloadStandardQR("svg")} style={{...Te.sharePopoverItem, width:"100%", cursor:"pointer"}}><span style={Te.sharePopoverIcon}>{Ae.download}</span>QR estándar SVG</button><div style={{
+        }} onMouseEnter={() => _0x44580a("download")} onMouseLeave={() => _0x44580a(null)} onClick={_0x228c85}><span style={Te.sharePopoverIcon}>{Ae.download}</span>Descargar arte PNG</div><button type="button" onClick={() => downloadStandardQR("png")} style={{...Te.sharePopoverItem, width:"100%", cursor:"pointer"}}><span style={Te.sharePopoverIcon}>{Ae.download}</span>QR estándar PNG</button><button type="button" onClick={() => downloadStandardQR("svg")} style={{...Te.sharePopoverItem, width:"100%", cursor:"pointer"}}><span style={Te.sharePopoverIcon}>{Ae.download}</span>QR estándar SVG</button><button type="button" onClick={downloadExportPackage} style={{...Te.sharePopoverItem,width:"100%",cursor:"pointer"}}><span style={Te.sharePopoverIcon}>{Ae.download}</span>Paquete ZIP QR + arte</button><div style={{
           height: 1,
           margin: "2px 8px",
           background: "rgba(158, 142, 121, 0.15)"

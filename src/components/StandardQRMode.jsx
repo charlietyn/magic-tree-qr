@@ -1,5 +1,6 @@
 // Hooks are injected by the parent because the existing app bundles its own React runtime.
 import { createQRStandardSVG, createQRStandardPNGDataURL } from "../core/qr/qrExport.js";
+import { createZip, pngDataURLToBytes } from "../features/export/zipWriter.js";
 
 function downloadURL(url, name) {
   const a = document.createElement("a");
@@ -32,6 +33,31 @@ export default function StandardQRMode({ initialPayload, qrService, reactHooks }
     }
   }
 
+  function exportZip() {
+    if (!result.success) return;
+    let zipURL = null;
+    try {
+      const metadata = {
+        version: 1,
+        payload: result.payload,
+        qrSize: result.size,
+        errorCorrectionLevel: result.errorCorrectionLevel,
+        visualMode: "standard-2d"
+      };
+      const entries = [
+        {name:"qr-standard.png", data: pngDataURLToBytes(createQRStandardPNGDataURL(result.matrix))},
+        {name:"qr-vector.svg", data: new TextEncoder().encode(svg)},
+        {name:"metadata.json", data: new TextEncoder().encode(JSON.stringify(metadata,null,2))}
+      ];
+      zipURL = URL.createObjectURL(new Blob([createZip(entries)], {type:"application/zip"}));
+      downloadURL(zipURL, "magic-tree-qr-export.zip");
+    } catch (error) {
+      window.alert("No se pudo exportar ZIP: " + String(error?.message ?? error));
+    } finally {
+      if (zipURL) setTimeout(() => URL.revokeObjectURL(zipURL), 1000);
+    }
+  }
+
   return <main style={{ minHeight: "100vh", boxSizing: "border-box", padding: "32px 16px",
     background: "#f7f3ec", color: "#342b25", fontFamily: "system-ui, sans-serif" }}>
     <div style={{ maxWidth: 650, margin: "auto", padding: 24, background: "#fff", borderRadius: 18,
@@ -58,6 +84,7 @@ export default function StandardQRMode({ initialPayload, qrService, reactHooks }
       <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
         <button type="button" disabled={!result.success} onClick={exportPNG}>Descargar PNG</button>
         <button type="button" disabled={!result.success} onClick={exportSVG}>Descargar SVG</button>
+        <button type="button" disabled={!result.success} onClick={exportZip}>Paquete ZIP</button>
       </div>
       <p style={{ fontSize: 13, color: "#6e5d4e" }}>
         La integridad del QR estándar es independiente de los efectos artísticos del árbol.
