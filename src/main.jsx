@@ -16512,6 +16512,7 @@ function _Component() {
     _0x5bd40a.current = [_0x4d37f5.rgb[0], _0x4d37f5.rgb[1], _0x4d37f5.rgb[2], 1];
   }
   (0, m.useEffect)(() => {
+    let saved = false;
     try {
       sessionStorage.setItem(Ie, JSON.stringify({
         url: _0x16eae2,
@@ -16519,14 +16520,18 @@ function _Component() {
         palette: _0x2d9aad,
         muted: _0x1b8033
       }));
+      saved = true;
     } catch {
-      // Storage may be blocked by the browser.
+      // If storage is unavailable, keep any explicit shared URL for refresh.
     }
-    if (!Ue(_0x16eae2).valid) return; // No sharing token for an invalid QR document.
-    const _0x22e55c = _0x16eae2 === "https://ppweilai.online/" && _0x153546 === 1 && _0x2d9aad === -1;
-    const _0x12a439 = Oe(_0x16eae2, _0x153546, _0x2d9aad);
-    const _0xc83661 = _0x25978d ? "/s/" + _0x12a439 : _0x22e55c ? "/" : "?q=" + _0x12a439;
-    window.history.replaceState(null, "", _0xc83661);
+    // Privacy: do not automatically put the QR payload (even Base64 encoded)
+    // into the address bar. The Share action still explicitly builds a link.
+    if (saved) {
+      const cleanPath = _0x25978d ? "/?m=1" : "/";
+      if (window.location.pathname + window.location.search !== cleanPath) {
+        window.history.replaceState(null, "", cleanPath);
+      }
+    }
   }, [_0x16eae2, _0x153546, _0x2d9aad, _0x1b8033, _0x25978d]);
   const canShareCurrentQR = _0x570a8a && _0x14b306 === _0x16eae2;
   const _0x23bdbd = _0x446d01 && _0x52efb9 && !!_0x1f990f;
@@ -17729,7 +17734,7 @@ function _Component() {
   const _0x471049 = _0x1aa996 => <div style={Te.sharePopoverWrap}><button onClick={_0x274176} disabled={!canShareCurrentQR} aria-label={_0x1aa996} title={_0x1aa996} style={Te.shareBtn}>{Ae.share}</button>{_0xdbc765 && <ze.Fragment><div style={Te.sharePopoverBackdrop} onClick={() => {
         _0xdd5148(false);
         _0x44580a(null);
-      }} /><div style={Te.sharePopover}><button type="button" style={{textAlign:"left",width:"100%",cursor:"pointer",
+      }} /><div style={Te.sharePopover}><p role="note" style={{fontSize:12,lineHeight:1.5,padding:"6px 12px",margin:0,color:"#6c5848"}}>El enlace compartido incluye los datos QR codificados, pero no cifrados. Evita compartir información confidencial.</p><button type="button" style={{textAlign:"left",width:"100%",cursor:"pointer",
           ...Te.sharePopoverItem,
           ...(_0x32b6de === "link" ? Te.sharePopoverItemHover : {})
         }} onMouseEnter={() => _0x44580a("link")} onMouseLeave={() => _0x44580a(null)} onClick={_0x1f6acc}><span style={Te.sharePopoverIcon}>{_0xcc6554 === "link" ? Ae.check : Ae.copyLink}</span>{_0xcc6554 === "link" ? "已复制!" : "复制链接"}</button><button type="button" style={{textAlign:"left",width:"100%",cursor:"pointer",
