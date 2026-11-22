@@ -1,3 +1,31 @@
+## 🇪🇸 Modernización V2 — rama de desarrollo
+
+La refactorización se está realizando **incrementalmente**, siguiendo el plan maestro V2.0,
+en la rama **feat/mtq-master-plan-v2-qr-integrity** de **charlietyn/magic-tree-qr**.
+
+Esta rama incorpora: codificador QR separado del código React/WebGPU; validación
+centralizada; protección de enlaces y sesión; preservación exacta del contenido; QR
+estándar PNG/SVG; alternativa 2D sin WebGPU; límites de importación y tests unitarios.
+
+**No están completas las nueve fases.** Todavía faltan pruebas de compilación,
+escaneo real de imágenes, ejecución en navegadores y regresión visual de estaciones.
+
+### Desarrollo local en Node.js 22+ / WSL2 / Windows
+
+    git clone https://github.com/charlietyn/magic-tree-qr.git
+    cd magic-tree-qr
+    git switch feat/mtq-master-plan-v2-qr-integrity
+    npm ci
+    npm test
+    npm run build
+    npm run dev
+
+[Estado verificable del plan V2](docs/development/MTQ_V2_EXECUTION_STATUS.md) ·
+[Diagnóstico inicial](docs/architecture/MTQ_V2_BASELINE.md) ·
+[Arquitectura modular](docs/architecture/MTQ_V2_ARCHITECTURE.md)
+
+---
+
 # 🌲 3D 艺术二维码生成器 (Magic Tree QR)
 
 > 基于 **WebGPU** 和 **React** 的高性能 3D 体素艺术二维码生成器。将任意网址、文本或内容转化为生长摇曳的四季 3D 魔法树，支持真实扫码识别、二维码图片截图识别解析与四季沉浸式视听体验。
@@ -15,12 +43,12 @@
   - **🍁 秋季（Autumn）**：层林尽染的金黄红叶，带有地面湿润反光与连绵秋雨涟漪；
   - **❄️ 冬季（Winter）**：雅致的雪覆苍松、霜晶雾凇与冬青红梅点缀，伴随漫天旋转飘洒的鹅毛大雪。
 - 📷 **全能二维码识别与生成**：
-  - **文本/网址输入**：支持任意长度文本、UTF-8 字符及网址生成二维码；
+  - **文本/网址输入**：支持符合 QR 容量限制的文本、UTF-8 字符及网址生成二维码；
   - **传图识别**：内置 jsQR 纯前端引擎，点击相机图标即可选择二维码图片秒级解析；
   - **截图粘贴（Ctrl+V）**：无需保存文件，微信/系统截图后直接在页面按 `Ctrl+V` 一键生成；
   - **拖拽支持**：拖入二维码图片文件直接解析。
 - 🎯 **3D / 2D 双视角无缝切换**：
-  - 点击 3D 树木即可平滑过渡至正上方 2D 视角，高对比度保证 **100% 扫码识别率**；
+  - 点击 3D 树木即可平滑过渡至正上方 2D 视角，实际扫码效果取决于设备、尺寸与对比度；建议使用标准 QR 导出进行可靠识别；
   - 再次点击无缝回归 3D 沉浸式观赏视角。
 - 🎨 **丰富配色调色板**：支持默认配色与薰衣草紫、珊瑚红、金黄、天蓝、雪白等自定义主题色彩。
 - 🎵 **四季环境音效**：内置专属于春夏秋冬的白噪音与沉浸式背景音乐。
