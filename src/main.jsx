@@ -16261,6 +16261,8 @@ function _Component() {
   const initialQRValidation = _0x5d9fc1.error
     ? { valid: false, error: _0x5d9fc1.error }
     : Ue(_0x5d9fc1.url);
+  const [gpuUnavailable, setGpuUnavailable] = (0, m.useState)(false);
+  const reportGpuUnavailable = (0, m.useCallback)(() => setGpuUnavailable(true), []);
   const [_0x1bb750, _0x8d8406] = (0, m.useState)({
     width: 0,
     height: 0,
@@ -16641,7 +16643,8 @@ function _Component() {
       treeSeed: _0x5399fb,
       qrSnapshotRef: _0x1ddb2b,
       onFlatSettled: _0x3d1546,
-      onQrSnapshotUpdated: _0x1e3edc
+      onQrSnapshotUpdated: _0x1e3edc,
+      onGpuUnavailable: gpuFailureCallback
     } = _0xed4da;
     const _0x41e5ac = (0, m.useRef)(null);
     const _0x9a37bd = (0, m.useRef)(false);
@@ -16715,6 +16718,9 @@ function _Component() {
             return null;
           }
           const _0x2cc8ca = await _0x1e2627.requestDevice();
+          _0x2cc8ca.lost.then(info => {
+            if (info?.reason !== "destroyed") gpuFailureCallback();
+          }).catch(() => gpuFailureCallback());
           const _0x1614a7 = navigator.gpu.getPreferredCanvasFormat();
           const _0x2635ba = Math.min(window.devicePixelRatio || 1, 2);
           _0x3965a8.width = Math.max(1, Math.floor(_0x99bdef * _0x2635ba));
@@ -17174,6 +17180,7 @@ function _Component() {
           };
         }(_0x3404a9, _0x1b3318, _0x1f69fa);
         if (!_0x2c9dd9) {
+          gpuFailureCallback();
           return;
         }
         _0x27739d.current = _0x2c9dd9;
@@ -17345,10 +17352,11 @@ function _Component() {
         _0x363ece();
       } catch (_0x3ed1c9) {
         console.error("WebGPU init failed:", _0x3ed1c9);
+        gpuFailureCallback();
       } finally {
         _0x9a37bd.current = false;
       }
-    }, [_0x1b3318, _0x1f69fa, _0xc8ac50, _0x357820, _0x45ded0, _0x2728d7, _0x5399fb, _0x1ddb2b, _0x3d1546, _0x1e3edc]);
+    }, [_0x1b3318, _0x1f69fa, _0xc8ac50, _0x357820, _0x45ded0, _0x2728d7, _0x5399fb, _0x1ddb2b, _0x3d1546, _0x1e3edc, gpuFailureCallback]);
     (0, m.useEffect)(() => {
       const _0x20486e = setTimeout(_0x354f89, 100);
       return () => {
@@ -17443,7 +17451,8 @@ function _Component() {
     treeSeed: _0x2f2fa6,
     qrSnapshotRef: _0x4457f4,
     onFlatSettled: _0x1246ba,
-    onQrSnapshotUpdated: _0x38016f
+    onQrSnapshotUpdated: _0x38016f,
+    onGpuUnavailable: reportGpuUnavailable
   });
   const _0x1d6f82 = (0, m.useCallback)(() => {
     _0x583d98.current = !_0x583d98.current;
@@ -17663,7 +17672,7 @@ function _Component() {
       });
     }
   };
-  if (navigator.gpu) {
+  if (navigator.gpu && !gpuUnavailable) {
     return <div style={Te.container}><a href="https://ppweilai.online/" target="_blank" rel="noopener noreferrer" aria-label="访问主页" style={{
         ...Te.topLogoLink,
         ...(_0x175ba0 ? Te.topLogoLinkWide : {})
@@ -17867,7 +17876,7 @@ function _Component() {
               backgroundColor: _0x13972f.color
             }} key={_0x33296b} />)}</div></div>}</div>}<div ref={_0x4efbdf} style={Te.creditsHintWrap}><a href="https://github.com/xscanzm/magic-tree-qr" target="_blank" rel="noopener noreferrer" aria-label="查看 GitHub 开源仓库" title="GitHub 开源仓库 (xscanzm/magic-tree-qr)" style={Te.githubButton}>{Ae.github}</a>{_0x2b80c3 && <div style={Te.creditsHintTooltip}><div style={Te.creditsHintArrow} /><div style={Te.creditsHintCard}><div style={{ fontWeight: 700, fontSize: 12, marginBottom: 4, color: "#3f3328" }}>3D 艺术二维码生成器</div><div style={{ color: "#6e5d4e", marginBottom: 6 }}>点击树木可俯视查看扫码二维码<br />支持春季 · 夏季 · 秋季 · 冬季</div><div style={{ borderTop: "1px solid rgba(158, 142, 121, 0.22)", paddingTop: 6, marginBottom: 6 }}><span style={{ fontWeight: 600 }}>开源仓库：</span><a href="https://github.com/xscanzm/magic-tree-qr" target="_blank" rel="noopener noreferrer" style={Te.creditsHintLink}>github.com/xscanzm/magic-tree-qr</a></div><div style={{ borderTop: "1px solid rgba(158, 142, 121, 0.15)", paddingTop: 5, display: "flex", justifyContent: "space-between", color: "#8a7a6b", fontSize: 10 }}><span>致敬 <a href="https://icqr.com" target="_blank" rel="noopener noreferrer" style={Te.creditsHintLink}>icqr</a></span><span>汉化 & 重构 <strong>xscanzm</strong></span></div></div></div>}<button type="button" aria-label="查看项目说明与开源信息" title="项目说明 & 开源信息" onClick={() => _0x23dd65(_0x3b08aa => !_0x3b08aa)} style={Te.creditsHintButton}>{Ae.info}</button></div></div>;
   } else {
-    return <StandardQRMode initialPayload={_0x5d9fc1.url} qrService={qrService} />;
+    return <StandardQRMode initialPayload={_0x14b306} qrService={qrService} />;
   }
 }
 var Ve = document.getElementById("root");
