@@ -1,7 +1,8 @@
 import jsQR from "jsqr";
 import { createQRService } from "./core/qr/qrService.js";
 import originalQrEncoder from "./core/qr/vendor/qrEncoder.js";
-import { decodeBase64URL as Be, encodeShareToken as Oe, decodeShareToken as Fe } from "./core/qr/shareCodec.js";
+import { encodeShareToken as Oe } from "./core/qr/shareCodec.js";
+import { readInitialQRState } from "./core/qr/initialState.js";
 import StandardQRMode from "./components/StandardQRMode.jsx";
 var e = Object.create;
 var t = Object.defineProperty;
@@ -16250,60 +16251,15 @@ function Ue(payload) {
 }
 
 function _Component() {
-  const _0x5d9fc1 = function () {
-    try {
-      const _0x162db9 = JSON.parse(sessionStorage.getItem(Ie) ?? "{}");
-      const _0x39f614 = window.location.pathname.match(/^\/s\/([A-Za-z0-9_-]+)$/);
-      if (_0x39f614) {
-        const _0x20f0ee = Fe(_0x39f614[1]);
-        if (_0x20f0ee && _0x20f0ee.url.trim().length > 0) {
-          return {
-            url: _0x20f0ee.url,
-            season: _0x20f0ee.season,
-            palette: _0x20f0ee.palette,
-            muted: typeof _0x162db9.muted != "boolean" || _0x162db9.muted,
-            sharedMode: true
-          };
-        }
-      }
-      const _0xfd1861 = new URLSearchParams(window.location.search);
-      const _0x333e15 = _0xfd1861.get("q");
-      if (_0x333e15) {
-        const _0x376179 = Fe(_0x333e15);
-        if (_0x376179 && _0x376179.url.trim().length > 0) {
-          return {
-            url: _0x376179.url,
-            season: _0x376179.season,
-            palette: _0x376179.palette,
-            muted: typeof _0x162db9.muted != "boolean" || _0x162db9.muted,
-            sharedMode: false
-          };
-        }
-      }
-      const _0x5e4d99 = _0xfd1861.get("u");
-      const _0x5e4529 = _0x5e4d99 ? Be(_0x5e4d99) : null;
-      const _0x52f5fb = typeof _0x5e4529 == "string" && _0x5e4529.trim().length > 0 ? _0x5e4529.trim() : typeof _0x162db9.url == "string" ? _0x162db9.url : K;
-      const _0x5f2662 = Number.parseInt(_0xfd1861.get("s") ?? "", 10);
-      const _0x168318 = Number.parseInt(_0xfd1861.get("c") ?? "", 10);
-      const _0x2003ad = _0xfd1861.get("m") === "1";
-      return {
-        url: _0x52f5fb,
-        season: Number.isFinite(_0x5f2662) ? Math.min(3, Math.max(0, _0x5f2662)) : typeof _0x162db9.season == "number" ? Math.min(3, Math.max(0, _0x162db9.season)) : 1,
-        palette: Number.isFinite(_0x168318) ? Math.min(5, Math.max(-1, _0x168318)) : typeof _0x162db9.palette == "number" ? Math.min(5, Math.max(-1, _0x162db9.palette)) : -1,
-        muted: typeof _0x162db9.muted != "boolean" || _0x162db9.muted,
-        sharedMode: _0x2003ad
-      };
-    } catch {
-      return {
-        url: K,
-        season: 1,
-        palette: -1,
-        muted: true,
-        sharedMode: false
-      };
-    }
-  }();
-  const initialQRValidation = Ue(_0x5d9fc1.url);
+  const _0x5d9fc1 = readInitialQRState({
+    pathname: window.location.pathname,
+    search: window.location.search,
+    readSession: () => sessionStorage.getItem(Ie),
+    defaultPayload: K
+  });
+  const initialQRValidation = _0x5d9fc1.error
+    ? { valid: false, error: _0x5d9fc1.error }
+    : Ue(_0x5d9fc1.url);
   const [_0x1bb750, _0x8d8406] = (0, m.useState)({
     width: 0,
     height: 0,
@@ -16546,6 +16502,7 @@ function _Component() {
       palette: _0x2d9aad,
       muted: _0x1b8033
     }));
+    if (!Ue(_0x16eae2).valid) return; // No sharing token for an invalid QR document.
     const _0x22e55c = _0x16eae2 === "https://ppweilai.online/" && _0x153546 === 1 && _0x2d9aad === -1;
     const _0x12a439 = Oe(_0x16eae2, _0x153546, _0x2d9aad);
     const _0xc83661 = _0x25978d ? "/s/" + _0x12a439 : _0x22e55c ? "/" : "?q=" + _0x12a439;
