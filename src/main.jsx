@@ -3,6 +3,7 @@ import { createQRService } from "./core/qr/qrService.js";
 import originalQrEncoder from "./core/qr/vendor/qrEncoder.js";
 import { encodeShareToken as Oe } from "./core/qr/shareCodec.js";
 import { readInitialQRState } from "./core/qr/initialState.js";
+import { createQRStandardSVG, createQRStandardPNGDataURL } from "./core/qr/qrExport.js";
 import StandardQRMode from "./components/StandardQRMode.jsx";
 var e = Object.create;
 var t = Object.defineProperty;
@@ -17497,6 +17498,33 @@ function _Component() {
     _0xdd5148(false);
     _0x44580a(null);
   };
+  // Standard exports use the SAME validated QR matrix as the 3D scene.
+  const downloadStandardQR = format => {
+    if (!canShareCurrentQR) return;
+    let url = null;
+    try {
+      const result = qrService.generate(_0x16eae2);
+      if (!result.success) throw new Error(result.error);
+      if (format === "svg") {
+        url = URL.createObjectURL(new Blob([createQRStandardSVG(result.matrix)],
+          { type: "image/svg+xml;charset=utf-8" }));
+      } else if (format === "png") {
+        url = createQRStandardPNGDataURL(result.matrix);
+      } else throw new Error("Formato de exportación no admitido.");
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = "magic-tree-qr-standard." + format;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      _0xdd5148(false);
+      _0x44580a(null);
+    } catch (error) {
+      window.alert("Error al exportar QR estándar: " + String(error?.message ?? error));
+    } finally {
+      if (url?.startsWith("blob:")) setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+  };
   const _0x228c85 = async () => {
     if (!canShareCurrentQR) return;
     const _0x4ad5b9 = _0x4457f4.current || _0x1f990f;
@@ -17591,7 +17619,7 @@ function _Component() {
         }} onMouseEnter={() => _0x44580a("link")} onMouseLeave={() => _0x44580a(null)} onClick={_0x1f6acc}><span style={Te.sharePopoverIcon}>{_0xcc6554 === "link" ? Ae.check : Ae.copyLink}</span>{_0xcc6554 === "link" ? "已复制!" : "复制链接"}</div><div role="button" tabIndex={0} style={{
           ...Te.sharePopoverItem,
           ...(_0x32b6de === "download" ? Te.sharePopoverItemHover : {})
-        }} onMouseEnter={() => _0x44580a("download")} onMouseLeave={() => _0x44580a(null)} onClick={_0x228c85}><span style={Te.sharePopoverIcon}>{Ae.download}</span>Download QR</div><div style={{
+        }} onMouseEnter={() => _0x44580a("download")} onMouseLeave={() => _0x44580a(null)} onClick={_0x228c85}><span style={Te.sharePopoverIcon}>{Ae.download}</span>Descargar arte PNG</div><button type="button" onClick={() => downloadStandardQR("png")} style={{...Te.sharePopoverItem, width:"100%", cursor:"pointer"}}><span style={Te.sharePopoverIcon}>{Ae.download}</span>QR estándar PNG</button><button type="button" onClick={() => downloadStandardQR("svg")} style={{...Te.sharePopoverItem, width:"100%", cursor:"pointer"}}><span style={Te.sharePopoverIcon}>{Ae.download}</span>QR estándar SVG</button><div style={{
           height: 1,
           margin: "2px 8px",
           background: "rgba(158, 142, 121, 0.15)"
