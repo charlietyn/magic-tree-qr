@@ -16301,43 +16301,54 @@ function _Component() {
   _0x1246ba.current = _0x171bdf;
   _0x38016f.current = _0x23d318;
   const _qrInputRef = (0, m.useRef)(null);
-  const _decodeQRFromImage = (file) => {
+  const _decodeQRFromImage = file => {
     if (!file) return;
+    const accepted = ["image/png", "image/jpeg", "image/webp", "image/gif", "image/bmp"];
+    if (!accepted.includes(file.type) || !Number.isFinite(file.size) ||
+        file.size > 10 * 1024 * 1024) {
+      window.alert("Importa una imagen PNG, JPEG, WebP, GIF o BMP de hasta 10 MB.");
+      return;
+    }
     const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d", { willReadFrequently: true });
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
-        const imgData = ctx.getImageData(0, 0, img.width, img.height);
-        const res = jsQR(imgData.data, imgData.width, imgData.height, {
-          inversionAttempts: "attemptBoth"
-        });
-        if (res && res.data) {
-          const decoded = res.data;
-          _0x4a3a07(decoded);
-          const { valid, error } = Ue(decoded);
+    reader.onerror = () => window.alert("No se pudo leer la imagen QR.");
+    reader.onload = event => {
+      const image = new Image();
+      image.onerror = () => window.alert("La imagen QR está dañada o no se puede abrir.");
+      image.onload = () => {
+        try {
+          if (!image.width || !image.height) throw new Error("Dimensiones inválidas");
+          const ratio = Math.min(1, 2048 / Math.max(image.width, image.height));
+          const width = Math.max(1, Math.round(image.width * ratio));
+          const height = Math.max(1, Math.round(image.height * ratio));
+          const canvas = document.createElement("canvas");
+          canvas.width = width;
+          canvas.height = height;
+          const context = canvas.getContext("2d", {willReadFrequently: true});
+          if (!context) throw new Error("Canvas 2D no disponible");
+          context.drawImage(image, 0, 0, width, height);
+          const pixels = context.getImageData(0, 0, width, height);
+          const decoded = jsQR(pixels.data, width, height, {inversionAttempts: "attemptBoth"});
+          if (!decoded?.data) {
+            window.alert("No se detectó un QR válido. Prueba con otra imagen.");
+            return;
+          }
+          const payload = decoded.data;
+          const {valid, error} = Ue(payload);
+          _0x4a3a07(payload);
           _0x444573(valid);
+          _0x5559b9(!valid);
+          _0x182d75(valid ? "" : error);
           if (valid) {
             _0x4457f4.current = "";
             _0x23d318("");
-            _0x2f2fa6.current = decoded;
-            _0x1c2177(decoded);
-            _0x5559b9(false);
-            _0x182d75("");
-          } else {
-            _0x5559b9(true);
-            _0x182d75(error || "识别到的内容过长");
+            _0x2f2fa6.current = payload;
+            _0x1c2177(payload);
           }
-        } else {
-          alert("未在图片中检测到有效的二维码，请尝试上传清晰的二维码图片");
+        } catch (error) {
+          window.alert("No se pudo procesar la imagen QR: " + String(error?.message ?? error));
         }
       };
-      img.onerror = () => alert("无法加载该图片，请重试");
-      img.src = e.target.result;
+      image.src = event.target?.result;
     };
     reader.readAsDataURL(file);
   };
