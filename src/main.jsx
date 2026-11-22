@@ -16649,11 +16649,14 @@ function _Component() {
       disabled: gpuDisabled
     } = _0xed4da;
     const _0x41e5ac = (0, m.useRef)(null);
+    const visibilityCleanup = (0, m.useRef)(null);
     const _0x9a37bd = (0, m.useRef)(false);
     const _0x6f8fc9 = (0, m.useRef)(null);
     const _0x366195 = (0, m.useRef)(Date.now());
     const _0x27739d = (0, m.useRef)(null);
     const handleGpuFailure = (0, m.useCallback)(() => {
+      visibilityCleanup.current?.();
+      visibilityCleanup.current = null;
       if (_0x41e5ac.current != null) {
         cancelAnimationFrame(_0x41e5ac.current);
         _0x41e5ac.current = null;
@@ -17282,6 +17285,8 @@ function _Component() {
         setTimeout(_0x318264, 50);
         let _0x2f7bba = false;
         const _0x363ece = () => {
+          _0x41e5ac.current = null;
+          if (document.hidden || !_0x27739d.current || gpuDisabled) return;
           const _0x3136b0 = Date.now();
           const _0x4c30 = Math.min((_0x3136b0 - _0x5b6917.current) / 1000, 0.05);
           _0x5b6917.current = _0x3136b0;
@@ -17363,9 +17368,25 @@ function _Component() {
             rainMode: _0x4d86e9.current,
             trunkSeed: _0x5dd6ef
           });
-          _0x41e5ac.current = requestAnimationFrame(_0x363ece);
+          if (!document.hidden && !gpuDisabled && _0x27739d.current) {
+            _0x41e5ac.current = requestAnimationFrame(_0x363ece);
+          }
         };
-        _0x363ece();
+        const onVisibilityChange = () => {
+          if (document.hidden) {
+            if (_0x41e5ac.current != null) {
+              cancelAnimationFrame(_0x41e5ac.current);
+              _0x41e5ac.current = null;
+            }
+          } else if (_0x41e5ac.current == null && _0x27739d.current && !gpuDisabled) {
+            _0x5b6917.current = Date.now();
+            _0x41e5ac.current = requestAnimationFrame(_0x363ece);
+          }
+        };
+        visibilityCleanup.current?.();
+        document.addEventListener("visibilitychange", onVisibilityChange);
+        visibilityCleanup.current = () => document.removeEventListener("visibilitychange", onVisibilityChange);
+        if (!document.hidden) _0x363ece();
       } catch (_0x3ed1c9) {
         console.error("WebGPU init failed:", _0x3ed1c9);
         handleGpuFailure();
@@ -17452,8 +17473,18 @@ function _Component() {
       }
     }, [_0x1b3318, _0x1f69fa, _0xc8ac50]);
     (0, m.useEffect)(() => () => {
-      if (_0x41e5ac.current) {
+      visibilityCleanup.current?.();
+      visibilityCleanup.current = null;
+      if (_0x41e5ac.current != null) {
         cancelAnimationFrame(_0x41e5ac.current);
+        _0x41e5ac.current = null;
+      }
+      const renderer = _0x27739d.current;
+      _0x27739d.current = null;
+      if (renderer) {
+        try { renderer.depthTexture?.destroy(); } catch {}
+        try { renderer.sceneTexture?.destroy(); } catch {}
+        try { renderer.device?.destroy(); } catch {}
       }
     }, []);
   })({
