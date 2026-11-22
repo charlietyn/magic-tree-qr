@@ -16644,13 +16644,28 @@ function _Component() {
       qrSnapshotRef: _0x1ddb2b,
       onFlatSettled: _0x3d1546,
       onQrSnapshotUpdated: _0x1e3edc,
-      onGpuUnavailable: gpuFailureCallback
+      onGpuUnavailable: gpuFailureCallback,
+      disabled: gpuDisabled
     } = _0xed4da;
     const _0x41e5ac = (0, m.useRef)(null);
     const _0x9a37bd = (0, m.useRef)(false);
     const _0x6f8fc9 = (0, m.useRef)(null);
     const _0x366195 = (0, m.useRef)(Date.now());
     const _0x27739d = (0, m.useRef)(null);
+    const handleGpuFailure = (0, m.useCallback)(() => {
+      if (_0x41e5ac.current != null) {
+        cancelAnimationFrame(_0x41e5ac.current);
+        _0x41e5ac.current = null;
+      }
+      const renderer = _0x27739d.current;
+      _0x27739d.current = null;
+      if (renderer) {
+        try { renderer.depthTexture?.destroy(); } catch {}
+        try { renderer.sceneTexture?.destroy(); } catch {}
+        try { renderer.device?.destroy(); } catch {}
+      }
+      gpuFailureCallback();
+    }, [gpuFailureCallback]);
     const _0x2c7cf4 = (0, m.useRef)(0);
     const _0x4c7277 = (0, m.useRef)(0);
     const _0x5b6917 = (0, m.useRef)(Date.now());
@@ -16694,7 +16709,7 @@ function _Component() {
     }, [_0x582982]);
     const _0x354f89 = (0, m.useCallback)(async () => {
       try {
-        if (_0x27739d.current || _0x9a37bd.current) {
+        if (gpuDisabled || _0x27739d.current || _0x9a37bd.current) {
           return;
         }
         if (!Ue(_0x2323cd.current).valid) {
@@ -16719,8 +16734,8 @@ function _Component() {
           }
           const _0x2cc8ca = await _0x1e2627.requestDevice();
           _0x2cc8ca.lost.then(info => {
-            if (info?.reason !== "destroyed") gpuFailureCallback();
-          }).catch(() => gpuFailureCallback());
+            if (info?.reason !== "destroyed") handleGpuFailure();
+          }).catch(() => handleGpuFailure());
           const _0x1614a7 = navigator.gpu.getPreferredCanvasFormat();
           const _0x2635ba = Math.min(window.devicePixelRatio || 1, 2);
           _0x3965a8.width = Math.max(1, Math.floor(_0x99bdef * _0x2635ba));
@@ -17180,7 +17195,7 @@ function _Component() {
           };
         }(_0x3404a9, _0x1b3318, _0x1f69fa);
         if (!_0x2c9dd9) {
-          gpuFailureCallback();
+          handleGpuFailure();
           return;
         }
         _0x27739d.current = _0x2c9dd9;
@@ -17352,11 +17367,11 @@ function _Component() {
         _0x363ece();
       } catch (_0x3ed1c9) {
         console.error("WebGPU init failed:", _0x3ed1c9);
-        gpuFailureCallback();
+        handleGpuFailure();
       } finally {
         _0x9a37bd.current = false;
       }
-    }, [_0x1b3318, _0x1f69fa, _0xc8ac50, _0x357820, _0x45ded0, _0x2728d7, _0x5399fb, _0x1ddb2b, _0x3d1546, _0x1e3edc, gpuFailureCallback]);
+    }, [_0x1b3318, _0x1f69fa, _0xc8ac50, _0x357820, _0x45ded0, _0x2728d7, _0x5399fb, _0x1ddb2b, _0x3d1546, _0x1e3edc, handleGpuFailure, gpuDisabled]);
     (0, m.useEffect)(() => {
       const _0x20486e = setTimeout(_0x354f89, 100);
       return () => {
@@ -17452,7 +17467,8 @@ function _Component() {
     qrSnapshotRef: _0x4457f4,
     onFlatSettled: _0x1246ba,
     onQrSnapshotUpdated: _0x38016f,
-    onGpuUnavailable: reportGpuUnavailable
+    onGpuUnavailable: reportGpuUnavailable,
+    disabled: gpuUnavailable
   });
   const _0x1d6f82 = (0, m.useCallback)(() => {
     _0x583d98.current = !_0x583d98.current;
