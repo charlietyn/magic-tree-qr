@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+// Hooks are injected by the parent because the existing app bundles its own React runtime.
 import { createQRStandardSVG, createQRStandardPNGDataURL } from "../core/qr/qrExport.js";
 
 function downloadURL(url, name) {
@@ -11,7 +11,8 @@ function downloadURL(url, name) {
 }
 
 /** Working QR generator when WebGPU is absent; original artistic mode remains untouched. */
-export default function StandardQRMode({ initialPayload, qrService }) {
+export default function StandardQRMode({ initialPayload, qrService, reactHooks }) {
+  const {useMemo, useState} = reactHooks;
   const [payload, setPayload] = useState(initialPayload);
   const result = useMemo(() => qrService.generate(payload), [payload, qrService]);
   const svg = useMemo(() => result.success ? createQRStandardSVG(result.matrix) : "", [result]);
